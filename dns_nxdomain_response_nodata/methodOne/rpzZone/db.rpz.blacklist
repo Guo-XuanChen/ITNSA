@@ -11,5 +11,3 @@ $TTL	604800
 ;
 @	IN	NS	localhost.
 *.skills.com	CNAME	*.
-
-
