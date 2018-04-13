@@ -1,0 +1,18 @@
+;
+; BIND data file for local loopback interface
+;
+$TTL	604800
+@	IN	SOA	localhost. root.localhost. (
+		   20180413	    ; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+@	IN	NS	localhost.
+skills.com      CNAME       rpz-passthru.
+lnxws.skills.com        CNAME       rpz-passthru.
+lnxdc.skills.com        CNAME       rpz-passthru.
+lnxsrv.skills.com       CNAME       rpz-passthru.
+www.skills.com          CNAME       rpz-passthru.
+record.skills.com   	CNAME	    rpz-passthru.
