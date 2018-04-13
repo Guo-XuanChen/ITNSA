@@ -15,4 +15,3 @@ lnxws   IN  A   192.168.80.11
 lnxdc   IN  A   192.168.80.5
 lnxsrv  IN  A   192.168.80.6
 www	    IN	A	192.168.80.21
-
