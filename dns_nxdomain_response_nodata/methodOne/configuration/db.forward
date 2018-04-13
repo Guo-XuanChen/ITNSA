@@ -1,0 +1,17 @@
+;
+; BIND data file for local loopback interface
+;
+$TTL	604800
+@	IN	SOA	skillls.com. root.skillls.com. (
+		   20180413	    ; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+@	IN	NS	lnxws.skillls.com.
+@	IN	A	192.168.80.11
+lnxws   IN  A   192.168.80.11
+lnxdc   IN  A   192.168.80.5
+lnxsrv  IN  A   192.168.80.6
+www	    IN	A	192.168.80.21
