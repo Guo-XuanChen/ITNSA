@@ -26,7 +26,7 @@ my $diff = Array::Diff->diff(\@oldFileArray, \@newFileArray);
 my @addArray = @{$diff->added};
 my @delArray = @{$diff->deleted};
 
-# /* Add RR */ #
+# /* add RR */ #
 if($#addArray != -1){
     foreach my $line (@addArray){
         my $writeValue = sprintf("%-20s\t%5s\t%17s", $line, "CNAME", "rpz-passthru.");
@@ -34,7 +34,7 @@ if($#addArray != -1){
     }
 }
 
-# /* Delete RR */ #
+# /* delete RR */ #
 if($#delArray != -1){
     foreach my $line (@delArray){
         `sed -i '/$line/d' $rpzFile`;
