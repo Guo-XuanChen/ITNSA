@@ -1,1 +1,3 @@
-* linguist-language=shell
+*.conf linguist-language=shell
+*.php linguist-language=php
+*.pl linguist-language=perl
