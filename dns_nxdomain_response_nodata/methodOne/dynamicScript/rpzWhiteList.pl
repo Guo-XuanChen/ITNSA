@@ -18,11 +18,11 @@ my $rpzFile = "/etc/bind/security/db.rpz.whitelist";
 my $domainFile = "/etc/bind/skills.com/db.forward";
 my @oldFileValue = `cat $rpzFile | grep -E '^(\\w+)' | awk '{print \$1}' | sed "1d"`;
 my @newFileValue = `cat $domainFile | grep -E '^(\\w)' | awk '{print \$1}'`;
-my @oldFileArray = map({ chomp; $_ } @oldFileValue);
-my @newFileArray = map({ chomp; "$_.skills.com"} @newFileValue);
+my @oldArray = map({ chomp; $_ } @oldFileValue);
+my @newArray = map({ chomp; "$_.skills.com"} @newFileValue);
 
 # /* difference array (old & new) */ #
-my $diff = Array::Diff->diff(\@oldFileArray, \@newFileArray);
+my $diff = Array::Diff->diff(\@oldArray, \@newArray);
 my @addArray = @{$diff->added};
 my @delArray = @{$diff->deleted};
 
