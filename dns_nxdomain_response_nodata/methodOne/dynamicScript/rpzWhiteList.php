@@ -30,7 +30,7 @@ if(0 !== $addCount){
     }
 }
 
-/* del RR  */
+/* delete RR  */
 if(0 !== $delCount){
     foreach($delArray as $key => $value){
         shell_exec("sed -i '/" . $value . "/d' " . $rpzFile);
