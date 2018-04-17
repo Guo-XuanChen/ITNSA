@@ -1,45 +1,38 @@
 #!/usr/bin/php -q
 <?php
-// define
+/*
+    File    : rpzWhiteList.php
+    TIme    : 2018/04/17 18:13:25
+    Author  : Guo,Xuan-Chen
+*/
+
+/* anaylze file to array (old, new) */
 $domainName = "skills.com";
-$rpzWhiteList = "/etc/bind/security/db.rpz.whitelist";
-$domainForward = "/etc/bind/skills.com/db.forward";
-$oldList = shell_exec("cat " . $rpzWhiteList . " | grep -E '^(\w)' | grep -Ev '^(" . $domainName . ")' | awk '{print $1}'");
+$rpzFile = "/etc/bind/security/db.rpz.whitelist";
+$domainFile = "/etc/bind/skills.com/db.forward";
+$oldFileValue = shell_exec("cat " . $rpzFile . " | grep -E '^(\w)' | awk '{print $1}' | sed '1d'");
+$newFileValue = shell_exec("cat " . $domainFile . " | grep -E '^(\w)' | awk '{print $1}'");
+$oldArray = explode("\n", trim($oldFileValue));
+$newArray = explode("\n", trim($newFileValue));
+$newArray = array_map(function($value){ return $value . ".skills.com"; }, $newArray);
 
+/* difference array (old & new) */
+$addArray = array_diff($newArray, $oldArray);
+$delArray = array_diff($oldArray, $newArray);
+$addCount = count($addArray);
+$delCount = count($delArray);
 
-// process
-$oldListArray = explode("\n", $oldList);
-array_pop($oldListArray); // delete last array
-
-$newListArray = explode("\n", shell_exec("cat " . $domainForward . " | grep -E '^(\w)' | awk '{print $1}'"));
-array_pop($newListArray); // delete last array
-$newListArray = array_map(function($value){ return $value . ".skills.com"; }, $newListArray);
-
-
-// add
-$diffListArrayAdd = array_diff($newListArray, $oldListArray);
-$diffAddCount = count($diffListArrayAdd);
-
-if(0 === $diffAddCount){
-  // some code 
-}else{
-    foreach($diffListArrayAdd as $key => $value){
+/* add RR */
+if(0 !== $addCount){
+    foreach($addArray as $key => $value){
         $writeValue = sprintf("%-20s\t%5s\t%17s", $value, "CNAME", "rpz-passthru.");
-        $writeCommand = "echo \"" . $writeValue . "\" >> " .  $rpzWhiteList;
-        shell_exec($writeCommand);
-  }
+        shell_exec("echo \"" . $writeValue . "\" >> " . $rpzFile);       
+    }
 }
 
-// delete
-$diffListArrayDel = array_diff($oldListArray, $newListArray);
-$diffDelCount = count($diffListArrayDel);
-
-if(0 === $diffDelCount){
-    // some code
-}else{
-    foreach($diffListArrayDel as $key => $value){
-	    $deleteValue = $value;
-	    $deleteCommand = "sed -i '/" . $deleteValue .  "/d' " . $rpzWhiteList;
-	    shell_exec($deleteCommand);
+/* del RR  */
+if(0 !== $delCount){
+    foreach($delArray as $key => $value){
+        shell_exec("sed -i '/" . $value . "/d' " . $rpzFile);
     }
 }
