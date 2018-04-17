@@ -1,48 +1,51 @@
 #!/usr/bin/php -q
 <?php
-// define
+/*
+    File    : rpzWhiteList2.php
+    Time    : 2018/04/17 18:51:41
+    Author  : Guo,Xuan-Chen
+*/
+
+/* anaylze file to array (old & new) */
 $domainName = "skills.com";
-$rpzWhiteList = "/etc/bind/security/db.rpz.whitelist";
-$domainForward = "/etc/bind/skills.com/db.forward";
-$oldList = shell_exec("cat " . $rpzWhiteList . " | grep -E '^(\w)' | grep -Ev '^(" . $domainName . ")' | awk '{print $1}'");
-$newList = shell_exec("cat " . $domainForward . " | grep -E '^(\w)' | awk '{print $1}'");
+$rpzFile = "/etc/bind/security/db.rpz.whitelist";
+$domainFile = "/etc/bind/skills.com/db.forward";
+$oldFileValue = shell_exec("cat " . $rpzFile . " | grep -E '^(\w)' |  awk '{print $1}' | sed '1d'");
+$newFileValue = shell_exec("cat " . $domainFile . " | grep -E '^(\w)' | awk '{print $1}'");
+$oldArray = explode("\n", trim($oldFileValue));
+$newArray = explode("\n", trim($newFileValue));
+$newArray = array_map(function($value){ return $value . ".skills.com"; }, $newArray);
 
-// process
-$oldListArray = explode("\n", trim($oldList));
-
-$newListArray = explode("\n", trim($newList));
-$newListArray = array_map(function($value){ return $value . ".skills.com"; }, $newListArray);
-
+/* process */
 function dynamicEdit($newArray, $oldArray){
-	global $rpzWhiteList;
+	global $rpzFile;
 
+    /* difference array */
 	$addArray = array_diff($newArray, $oldArray);
 	$delArray = array_diff($oldArray, $newArray);
 	$addValue = count($addArray);
 	$delValue = count($delArray);
-	
+
+    /* not change */
 	if(0 === $addValue && 0 === $delValue){
 		return;
 	}
 
-    // add	
+    /* add RR */
 	if($addValue > 0){
 		foreach($addArray as $key => $value){
 			$writeValue = sprintf("%-20s\t%5s\t%17s", $value, "CNAME", "rpz-passthru.");
-            $writeCommand = "echo \""  . $writeValue . "\" >> " . $rpzWhiteList;
-			shell_exec($writeCommand);
+            shell_exec("echo \""  . $writeValue . "\" >> " . $rpzFile);
 		}
 	}
 
-    // delete
+    /* delete RR */
 	if($delValue > 0){	
 		foreach($delArray as $key => $value){
-			$removeValue = $value;
-			$removeCommand = "sed -i '/" . $removeValue . "/d' "  . $rpzWhiteList; 
-			shell_exec($removeCommand);
+			shell_exec("sed -i '/" . $value . "/d' "  . $rpzFile); 
 		}
 	}
 	return;
 }
 
-dynamicEdit($newListArray, $oldListArray);
+dynamicEdit($newArray, $oldArray);
