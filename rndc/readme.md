@@ -1,1 +1,1 @@
-rndc configuration
+# rndc configuration
