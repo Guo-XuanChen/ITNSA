@@ -1,0 +1,1 @@
+# rndc local management configuration
