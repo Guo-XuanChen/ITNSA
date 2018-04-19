@@ -1,0 +1,1 @@
+# rndc remote management configuration
