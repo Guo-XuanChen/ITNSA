@@ -1,1 +1,1 @@
-rndc local management
+# rndc local management
