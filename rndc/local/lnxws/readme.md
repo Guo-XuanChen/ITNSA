@@ -1,1 +1,1 @@
-# rndc local management configuration
+# rndc local management configuration - lnxws
