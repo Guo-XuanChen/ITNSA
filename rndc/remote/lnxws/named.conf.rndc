@@ -1,0 +1,6 @@
+# Configuration /etc/bind/named.conf.rndc
+include "/etc/bind/rndc.key";
+controls {
+    inet 0.0.0.0 port 953
+    allow { any; } keys { "rndc-key"; };
+};
