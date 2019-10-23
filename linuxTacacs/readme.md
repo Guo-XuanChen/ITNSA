@@ -17,4 +17,3 @@
 # incrontab -e
 /var/log/tac_plus.acct IN_MODIFY,IN_NO_LOOP /usr/bin/perl /script/perl/tacacsMonitor.pl 
 ```
-
