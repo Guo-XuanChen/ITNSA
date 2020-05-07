@@ -22,7 +22,7 @@
 # chown www-data:wwww-data -R /etc/apache2/script/
 # chmod 770 -R /etc/apache2/script/
 # chmod +x myauth.pl
-# chmod +x dellock.pl
+# chmod +x delLock.pl
 ```
 
 ## # **0x02, Create authentication user information**
